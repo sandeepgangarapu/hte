@@ -5,6 +5,7 @@ str(data)
 library(dplyr)
 library(sqldf)
 
+#adding a new variable 'treatment_group' to dataframe data
 for(i in 1:nrow(data)) {
   if (data[i,'cell'] == 1) {
     data[i, 'treatment_group'] <- 'control'
@@ -15,4 +16,11 @@ for(i in 1:nrow(data)) {
   } else data[i, 'treatment_group'] <- 'altruistic'
 }
 
-data2 <- sqldf('select cell, sum(number_referrals), count(cell) from data group by cell')
+#summary of treatment groups and their referrals
+sqldf('select treatment_group, sum(number_referrals), count(treatment_group),  
+      sum(number_referrals)/count(treatment_group) from data group by treatment_group')
+
+#subsetting data to contain just 'altruistic group' so as to do heterogeneity
+altruistic_data <- sqldf('select * from data where cell = 4')
+
+
