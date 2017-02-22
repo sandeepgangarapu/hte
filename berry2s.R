@@ -1,8 +1,11 @@
 #TODO:
+#check if the treatment variable is factor, if not convert it to factor
+#Also change code to treat treatment variable as factor 
 #Data cleaning
 #DummyVars
 #Feature reduction using variance
 #Feature reduction using PCA
+
 library(rattle)
 library(caret)
 library(pROC)

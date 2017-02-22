@@ -30,5 +30,7 @@ avg_effect[avg_effect$treatment_group=='altruistic','avg'] - avg_effect[avg_effe
 altruistic_data <- data %>% filter(cell==c(4,1))
 
 #Subsetting variables that matter
-alt_data_filter <- altruistic_data[,c("satisfied","NPS","lastday_purchase_all","num_purchase_all",
+alt_data_filter <- altruistic_data[,c("cell","satisfied","NPS","lastday_purchase_all","num_purchase_all",
                                       "money_spend_all","survey", "number_referrals")]
+
+write.csv(alt_data_filter, 'C:\\Users\\ganga020\\Google Drive\\Ed Research\\Heterogenous treatment effects\\collage_treatment_effect.csv', row.names = FALSE)
