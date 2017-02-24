@@ -12,7 +12,8 @@ str(collage_data)
 #changing some variable to factors
 col_names <- c("cell","satisfied","survey")
 collage_data[col_names] <- lapply(collage_data[col_names], factor)
-
+#Making a copy
+collage_data2 <- collage_data
 
 TreatmentVar <- 'cell'
 PredictorsVar <- c("satisfied","NPS","lastday_purchase_all","num_purchase_all","money_spend_all","survey")
@@ -37,7 +38,7 @@ RFModel_c <- train(number_referrals ~ satisfied+NPS+lastday_purchase_all+num_pur
                    metric = "RMSE",
                    #This argument checks n no. of combinations max for tree splitting
                    #As there are 6 predictor vars, using 3
-                   tuneLength = 3, #improved accuracy
+                   tuneLength = 3,
                    prox = FALSE,
                    trControl = RFControl)
 
@@ -45,8 +46,7 @@ RFModel_c <- train(number_referrals ~ satisfied+NPS+lastday_purchase_all+num_pur
 RFModel_t <- train(number_referrals ~ satisfied+NPS+lastday_purchase_all+num_purchase_all+money_spend_all+survey,
                    treatment_data,
                    method = "rf",
-                   tuneLength = 3, #improved accuracy
-                   metric = "RMSE",
+                   tuneLength = 3,
                    prox = FALSE,
                    trControl = RFControl)
 
@@ -57,9 +57,9 @@ predictions_c <- predict(object = RFModel_c,
                          collage_data)
 
 tau_2s <- predictions_t - predictions_c
-data['tau'] <- tau_2s
-#USE CART (CARET Rpart method) to create a tree
-target_var <- 'tau'
+collage_data2['tau'] <- tau_2s
+
+#
 tree <- train(data[,PredictorsVar],
               data[,target_var],
               method = "rpart")
