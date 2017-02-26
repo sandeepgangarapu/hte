@@ -5,6 +5,9 @@
 #BIG WARNINGS
 #1. RMSE is very low. Check why!
 #-------------------------------------------------------------------------------------------------------------------
+#Packages
+#install.packages('rattle')
+#-------------------------------------------------------------------------------------------------------------------
 #Reading treatment control data with covariates and target variable
 collage_data <- read.csv('C:\\Users\\ganga020\\Google Drive\\Ed Research\\Heterogenous treatment effects\\collage_treatment_effect.csv')
 str(collage_data)
@@ -56,11 +59,14 @@ predictions_t <- predict(object = RFModel_t,
 predictions_c <- predict(object = RFModel_c,
                          collage_data)
 
+#Calculating treatment effect for each entry
 tau_2s <- predictions_t - predictions_c
+#Adding the treatment effect back to the full data
 collage_data2['tau'] <- tau_2s
 
-#
-tree <- train(data[,PredictorsVar],
-              data[,target_var],
-              method = "rpart")
-
+#Creating tree with treatment effect as outcome variable to find heterogeneity
+tree2 <- rpart(tau ~ satisfied+NPS+lastday_purchase_all+num_purchase_all+money_spend_all+survey,
+               collage_data2)
+rpart.plot(tree2)
+a <- asRules(tree2)
+summary(a)
