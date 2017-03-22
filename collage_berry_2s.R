@@ -74,6 +74,8 @@ mean=mean(tau_2s)
 sd=sd(tau_2s)
 #Adding the treatment effect back to the full data
 collage_data2['tau'] <- tau_2s
+hist(collage_data$money_spend_all, labels = TRUE, breaks = 40)
+hist(collage_data$lastday_purchase_all, labels = TRUE, breaks = 40)
 
 #Creating tree with treatment effect as outcome variable to find heterogeneity
 tree2 <- rpart(tau ~ satisfied+NPS+lastday_purchase_all+num_purchase_all+money_spend_all+survey,
