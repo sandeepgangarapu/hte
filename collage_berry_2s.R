@@ -80,6 +80,8 @@ hist(collage_data$lastday_purchase_all, labels = TRUE, breaks = 40)
 #Creating tree with treatment effect as outcome variable to find heterogeneity
 tree2 <- rpart(tau ~ satisfied+NPS+lastday_purchase_all+num_purchase_all+money_spend_all+survey,
                collage_data2)
+tree2$frame
+
 rpart.plot(tree2)
 a <- asRules(tree2)
 tau1 = 0.00105637918831131
