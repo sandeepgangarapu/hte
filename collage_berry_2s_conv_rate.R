@@ -37,13 +37,12 @@ deduplication <- function(paths)
   }
   return(new_paths)
 }
-
 #-------------------------------------------------------------------------------------------------------------------
 #Pre processing of data
 #-------------------------------------------------------------------------------------------------------------------
 
 #Reading treatment control data with covariates and target variable
-collage_data <- read.csv('C:\\Users\\ganga020\\Google Drive\\Ed Research\\Heterogenous treatment effects\\collage_treatment_effect.csv')
+collage_data <- read.csv('C:\\Users\\Sandeep Kumar\\Google Drive\\Ed Research\\Heterogenous treatment effects\\collage_treatment_effect.csv')
 str(collage_data)
 
 #changing some variable to factors
@@ -56,6 +55,7 @@ barplot(prop.table(table(collage_data$satisfied)))
 barplot(prop.table(table(collage_data$survey)))
 hist(collage_data$NPS, labels = TRUE, breaks = 11)
 hist(collage_data$number_referrals, labels = TRUE, breaks = 6)
+hist(collage_data$con_rate, labels = TRUE, breaks = 6)
 hist(collage_data$num_purchase_all, labels = TRUE, breaks = 40)
 
 #Making a copy
@@ -63,7 +63,7 @@ collage_data2 <- collage_data
 
 TreatmentVar <- 'cell'
 PredictorsVar <- c("satisfied","NPS","lastday_purchase_all","num_purchase_all","money_spend_all","survey")
-OutcomeVar <-  "number_referrals"
+OutcomeVar <-  "con_rate"
 
 #Dividing control and treatments groups so as to fit seperate models
 control_data <- collage_data[collage_data[TreatmentVar]== '1',]
@@ -85,7 +85,7 @@ RFControl <- trainControl(method = "cv",
                           verboseIter = FALSE)
 
 #Training a Random Forest model on control group data
-RFModel_c <- train(number_referrals ~ satisfied+NPS+lastday_purchase_all+num_purchase_all+money_spend_all+survey,
+RFModel_c <- train(con_rate ~ satisfied+NPS+lastday_purchase_all+num_purchase_all+money_spend_all+survey,
                    control_data,
                    #'ranger' model can be used for faster processing,
                    #but it's giving errors w.r.t RMSE, hence using rf as of now
@@ -98,7 +98,7 @@ RFModel_c <- train(number_referrals ~ satisfied+NPS+lastday_purchase_all+num_pur
                    trControl = RFControl)
 
 #Training a Random Forest model on treatment group data
-RFModel_t <- train(number_referrals ~ satisfied+NPS+lastday_purchase_all+num_purchase_all+money_spend_all+survey,
+RFModel_t <- train(con_rate ~ satisfied+NPS+lastday_purchase_all+num_purchase_all+money_spend_all+survey,
                    treatment_data,
                    method = "rf",
                    metric = "RMSE",
@@ -212,5 +212,4 @@ leaf_frame <- leaf_frame[c("n","yval","sd","t_test","dev","complexity","path")]
 #-------------------------------------------------------------------------------------------------------------------
 #End of Treatment effect Analysis
 #-------------------------------------------------------------------------------------------------------------------
-
 

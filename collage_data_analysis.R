@@ -1,4 +1,4 @@
-data <- read.csv('C:\\Users\\ganga020\\Google Drive\\Ed Research\\Heterogenous treatment effects\\data.csv')
+data <- read.csv('C:\\Users\\Sandeep Kumar\\Google Drive\\Ed Research\\Heterogenous treatment effects\\data.csv')
 summary(data)
 str(data)
 
@@ -31,6 +31,6 @@ altruistic_data <- data %>% filter(cell==c(4,1))
 
 #Subsetting variables that matter
 alt_data_filter <- altruistic_data[,c("cell","satisfied","NPS","lastday_purchase_all","num_purchase_all",
-                                      "money_spend_all","survey", "number_referrals")]
+                                      "money_spend_all","survey", "number_referrals", "con_rate")]
 
-write.csv(alt_data_filter, 'C:\\Users\\ganga020\\Google Drive\\Ed Research\\Heterogenous treatment effects\\collage_treatment_effect.csv', row.names = FALSE)
+write.csv(alt_data_filter, 'C:\\Users\\Sandeep Kumar\\Google Drive\\Ed Research\\Heterogenous treatment effects\\collage_treatment_effect.csv', row.names = FALSE)
