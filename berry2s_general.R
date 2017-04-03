@@ -1,3 +1,9 @@
+#QUESTIONS
+#How good is Rpart tree we constructed?
+#Should we do test and training in rpart too?
+#Sample sizes vary between less than 30 and greater than 30. How do we conduct tests? 
+#ttest should only be used for sample size less than 30
+
 #TODO:
 #1. Generalize dedup function
 #2. 'ranger' model can be used for faster processing, 
@@ -45,13 +51,15 @@ deduplication <- function(paths)
 
 #This function uses berry-2s to find the heterogeneity in treatment effects and
 #outputs subgroups ordered by treatment effect size  
-berry2s <- function(data, treatment_variable, target_variable, covariates, covariate_factors)
+berry2s <- function(data, control_group_placeholder, treatment_group_placeholder,
+                    treatment_variable, target_variable, covariates, 
+                    covariate_factors)
 {
-  #Converting convariates that are supposed to be factors into factords
+  #Converting convariates that are supposed to be factors into factors
   data[covariate_factors] <- lapply(data[covariate_factors], factor)
   #Dividing data into control group and treatment group
-  control_data <- data[data[treatment_variable]== '1',]
-  treatment_data <- data[data[treatment_variable]== '4',]
+  control_data <- data[data[treatment_variable]== control_group_placeholder,]
+  treatment_data <- data[data[treatment_variable]== treatment_group_placeholder,]
   #Creating train control object using 10 fold cross validation
   RFControl <- trainControl(method = "cv",
                             number = 10,
@@ -69,7 +77,7 @@ berry2s <- function(data, treatment_variable, target_variable, covariates, covar
                      tuneLength = 3,
                      prox = FALSE,
                      trControl = RFControl)
-  
+
   #Training a Random Forest model on treatment group data
   RFModel_t <- train(x = treatment_data[,covariates],
                      y = treatment_data[,target_variable],
@@ -96,10 +104,12 @@ berry2s <- function(data, treatment_variable, target_variable, covariates, covar
   #Mean and standard deviation of treatment effects
   mean_tau2s=mean(tau_2s)
   sd_tau2s=sd(tau_2s)
-  
+  #Create formula
+  covariate_vec <- paste(covariates, collapse = '+')
+  formula_vec <- paste('tau ~ ', covariate_vec, sep = '')
+  formula_actual <- as.formula(formula_vec)
   #Creating tree with treatment effect as outcome variable to find heterogeneity
-  tree <- rpart(x = data[,covariates],
-                 y = data[,'tau'])
+  tree <- rpart(formula_actual, data)
   
   #Extracting useful info from rpart tree
   frame <- tree$frame
@@ -108,7 +118,7 @@ berry2s <- function(data, treatment_variable, target_variable, covariates, covar
   leaves <- row.names(frame)[frame$var == '<leaf>']
   
   #Finding path of leaf nodes
-  leaf_paths <- path.rpart(tree2, leaves, print.it = FALSE)
+  leaf_paths <- path.rpart(tree, leaves, print.it = FALSE)
   dedup_paths<- deduplication(leaf_paths)
   #Subsetting frame that contains leaf_nodes
   leaf_frame <- frame[frame$var == '<leaf>',]
@@ -134,10 +144,70 @@ berry2s <- function(data, treatment_variable, target_variable, covariates, covar
   return(leaf_frame)
 }
 
-
-a <- berry2s(collage_data,
+collage_data <- read.csv('C:\\Users\\ganga020\\Google Drive\\Ed Research\\Heterogenous treatment effects\\collage_treatment_effect.csv')
+control_placeholder <- '1'
+egoistic_placeholder <- '2'
+equitable_placeholder <- '3'
+altruistic_placeholder <- '4'
+alt_nr_output <- berry2s(
+             data = collage_data,
+             control_group_placeholder = control_placeholder,
+             treatment_group_placeholder = altruistic_placeholder,
              treatment_variable = "cell",
              target_variable = "number_referrals",
              covariates = c("satisfied","NPS","lastday_purchase_all","num_purchase_all","money_spend_all","survey"),
              covariate_factors = c("cell","satisfied","survey"))
+ego_nr_output <- berry2s(
+  data = collage_data,
+  control_group_placeholder = control_placeholder,
+  treatment_group_placeholder = egoistic_placeholder,
+  treatment_variable = "cell",
+  target_variable = "number_referrals",
+  covariates = c("satisfied","NPS","lastday_purchase_all","num_purchase_all","money_spend_all","survey"),
+  covariate_factors = c("cell","satisfied","survey"))
+equi_nr_output <- berry2s(
+  data = collage_data,
+  control_group_placeholder = control_placeholder,
+  treatment_group_placeholder = equitable_placeholder,
+  treatment_variable = "cell",
+  target_variable = "number_referrals",
+  covariates = c("satisfied","NPS","lastday_purchase_all","num_purchase_all","money_spend_all","survey"),
+  covariate_factors = c("cell","satisfied","survey"))
+alt_con_output <- berry2s(
+  data = collage_data,
+  control_group_placeholder = control_placeholder,
+  treatment_group_placeholder = altruistic_placeholder,
+  treatment_variable = "cell",
+  target_variable = "con_rate",
+  covariates = c("satisfied","NPS","lastday_purchase_all","num_purchase_all","money_spend_all","survey"),
+  covariate_factors = c("cell","satisfied","survey"))
+ego_con_output <- berry2s(
+  data = collage_data,
+  control_group_placeholder = control_placeholder,
+  treatment_group_placeholder = egoistic_placeholder,
+  treatment_variable = "cell",
+  target_variable = "con_rate",
+  covariates = c("satisfied","NPS","lastday_purchase_all","num_purchase_all","money_spend_all","survey"),
+  covariate_factors = c("cell","satisfied","survey"))
+equi_con_output <- berry2s(
+  data = collage_data,
+  control_group_placeholder = control_placeholder,
+  treatment_group_placeholder = equitable_placeholder,
+  treatment_variable = "cell",
+  target_variable = "con_rate",
+  covariates = c("satisfied","NPS","lastday_purchase_all","num_purchase_all","money_spend_all","survey"),
+  covariate_factors = c("cell","satisfied","survey"))
+
+
+write.csv(alt_nr_output, 'C:\\Users\\ganga020\\Google Drive\\Ed Research\\Heterogenous treatment effects\\alt_nr_output.csv', row.names = FALSE)
+write.csv(ego_nr_output, 'C:\\Users\\ganga020\\Google Drive\\Ed Research\\Heterogenous treatment effects\\ego_nr_output.csv', row.names = FALSE)
+write.csv(equi_nr_output, 'C:\\Users\\ganga020\\Google Drive\\Ed Research\\Heterogenous treatment effects\\equi_nr_output.csv', row.names = FALSE)
+write.csv(alt_con_output, 'C:\\Users\\ganga020\\Google Drive\\Ed Research\\Heterogenous treatment effects\\alt_con_output.csv', row.names = FALSE)
+write.csv(ego_con_output, 'C:\\Users\\ganga020\\Google Drive\\Ed Research\\Heterogenous treatment effects\\ego_con_output.csv', row.names = FALSE)
+write.csv(equi_con_output, 'C:\\Users\\ganga020\\Google Drive\\Ed Research\\Heterogenous treatment effects\\equi_con_output.csv', row.names = FALSE)
+
+
+
+
+
 

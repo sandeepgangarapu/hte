@@ -1,4 +1,4 @@
-data <- read.csv('C:\\Users\\Sandeep Kumar\\Google Drive\\Ed Research\\Heterogenous treatment effects\\data.csv')
+data <- read.csv('C:\\Users\\ganga020\\Google Drive\\Ed Research\\Heterogenous treatment effects\\data.csv')
 summary(data)
 str(data)
 
@@ -27,10 +27,10 @@ avg_effect <- data %>% group_by(treatment_group) %>% summarise(avg = mean(number
 avg_effect[avg_effect$treatment_group=='altruistic','avg'] - avg_effect[avg_effect$treatment_group=='control','avg']
 
 #subsetting data to contain just 'altruistic group and control group' so as to do heterogeneity
-altruistic_data <- data %>% filter(cell==c(4,1))
+altruistic_data <- data %>% filter(cell==c(4,1,2,3))
 
 #Subsetting variables that matter
 alt_data_filter <- altruistic_data[,c("cell","satisfied","NPS","lastday_purchase_all","num_purchase_all",
                                       "money_spend_all","survey", "number_referrals", "con_rate")]
 
-write.csv(alt_data_filter, 'C:\\Users\\Sandeep Kumar\\Google Drive\\Ed Research\\Heterogenous treatment effects\\collage_treatment_effect.csv', row.names = FALSE)
+write.csv(alt_data_filter, 'C:\\Users\\ganga020\\Google Drive\\Ed Research\\Heterogenous treatment effects\\collage_treatment_effect.csv', row.names = FALSE)

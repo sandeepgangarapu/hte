@@ -67,7 +67,7 @@ OutcomeVar <-  "number_referrals"
 
 #Dividing control and treatments groups so as to fit seperate models
 control_data <- collage_data[collage_data[TreatmentVar]== '1',]
-treatment_data <- collage_data[collage_data[TreatmentVar]== '4',]
+treatment_data <- collage_data[collage_data[TreatmentVar]== '2',]
 
 #-------------------------------------------------------------------------------------------------------------------
 #End of Pre processing of data
