@@ -4,7 +4,7 @@
 #install_github("swager/randomForestCI")
 
 library(causalTree)
-library(randomForestCI)
+library(randomForestCI) 
 
 data <- read.csv("/Users/emcfowla/github/apc_scan/methods/experimental_data_combined.csv")
 treat_idx <-which(data$treatment == 1)
