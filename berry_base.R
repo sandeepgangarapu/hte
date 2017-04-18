@@ -39,6 +39,33 @@ deduplication <- function(paths)
   return(new_paths)
 }
 
+positions_fn <- function(paths)
+{
+  new_paths <- list()
+  for (i in 1:length(paths)){
+    a <- strsplit(paths[[i]], ',')
+    lpag<- NULL; lpal<- NULL; msag<- NULL; msal<- NULL; npsg<- NULL; npsl<- NULL; npag<- NULL; npal<- NULL; sat<- NULL; sur<- NULL;
+    for (j in 1:length(a)){
+      #print(a[[j]])
+      if(grepl('lastday_purchase_all>', a[[j]])) {lpag = a[[j]]} #else {lpag = NULL}
+      if(grepl('lastday_purchase_all<', a[[j]])) {lpal = a[[j]]} #else {lpal = NULL}
+      if(grepl('money_spend_all>', a[[j]])) {msag = a[[j]]} #else {msag = NULL}
+      if(grepl('money_spend_all<', a[[j]])) {msal = a[[j]]} #else {msal = NULL}
+      if(grepl('NPS>', a[[j]])) {npsg = a[[j]]} #else {npsg = NULL}
+      if(grepl('NPS<', a[[j]])) {npsl = a[[j]]} #else {npsl = NULL}
+      if(grepl('num_purchase_all>', a[[j]])) {npag = a[[j]]} #else {npag = NULL}
+      if(grepl('num_purchase_all<', a[[j]])) {npal = a[[j]]} #else {npal = NULL}
+      if(grepl('satisfied', a[[j]])) {sat = a[[j]]} #else {sat = NULL}
+      if(grepl('survey', a[[j]])) {sur = a[[j]]} #else {sur = NULL}
+    }
+    new_paths[[i]] <- list(lpag=lpag, lpal=lpal, msag=msag,
+                           msal=msal, npsg=npsg, npsl=npsl,
+                           npag=npag, npal=npal, sat=sat, sur=sur)
+  }
+  return(new_paths)
+}
+
+
 #-------------------------------------------------------------------------------------------------------------------
 #Pre processing of data
 #-------------------------------------------------------------------------------------------------------------------
@@ -195,6 +222,12 @@ leaves <- row.names(frame)[frame$var == '<leaf>']
 #Finding path of leaf nodes
 leaf_paths <- path.rpart(tree, leaves, print.it = FALSE)
 dedup_paths<- deduplication(leaf_paths)
+position_path<- positions_fn(leaf_paths)
+#________________________________________________________
+
+position_path
+#________________________________________________________
+
 #Subsetting frame that contains leaf_nodes
 leaf_frame <- frame[frame$var == '<leaf>',]
 std<- vector()
@@ -218,6 +251,7 @@ leaf_frame['t_test'] <- (leaf_frame$yval*sqrt(leaf_frame$n))/sd_tau2s
 
 #Adding paths to leaf_frame
 leaf_frame$path <- sapply(dedup_paths, paste0, collapse = ',')
+
 
 #Ordering frame by descending order of treatment effect
 leaf_frame <- leaf_frame[order(-leaf_frame$yval),] 

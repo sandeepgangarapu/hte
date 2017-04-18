@@ -17,11 +17,12 @@
 #Output
 #1. Tree
 source("supplementary_functions.R")
+suppressPackageStartupMessages({
 library(ggplot2)
 library(caret)
 library(rattle)
 library(rpart)
-
+})
 #This function uses berry-2s to find the heterogeneity in treatment effects and
 #outputs subgroups ordered by treatment effect size  
 berry2s <- function(data, control_group_placeholder, treatment_group_placeholder,
@@ -83,7 +84,7 @@ berry2s <- function(data, control_group_placeholder, treatment_group_placeholder
   or_tree <- rpart(formula_actual, data)
   tree_cp <- or_tree$cptable[,1][which.min(or_tree$cptable[,4])]
   tree <- prune(or_tree, tree_cp)
-  predictions <- predict(tree, collage_data2)
+  predictions <- predict(tree, data)
   
   #Extracting useful info from rpart tree
   frame <- tree$frame
@@ -105,7 +106,7 @@ berry2s <- function(data, control_group_placeholder, treatment_group_placeholder
     b <- which(predictions==a)
     c <- vector()
     for(j in 1:length(b)){
-      d<- collage_data[,'tau'][b[j]]
+      d<- data[,'tau'][b[j]]
       c <- append(c,d)
     }
     std <- append(std, sd(c))
@@ -126,7 +127,7 @@ berry2s <- function(data, control_group_placeholder, treatment_group_placeholder
   leaf_frame <- leaf_frame[order(-leaf_frame$yval),] 
   
   #Subsetting leaf frame to only keep useful values
-  leaf_frame <- leaf_frame[c("n","yval","std","p_value","path")] 
+  leaf_frame <- leaf_frame[c("n","yval","p_value","path")] 
   
   
   return(leaf_frame)
