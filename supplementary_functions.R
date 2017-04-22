@@ -54,16 +54,42 @@ positions <- function(paths)
   return(new_paths)
 }
 
+dummy <- function(data, covar, val, sub_path){
+  covar_data <- data.frame(col=data[,covar])
+  plot_covar <- ggplot(covar_data, aes(col))+geom_histogram(bins=50)+geom_vline(xintercept = as.numeric(val), color = 'green')+ labs(x = covar)
+  print(plot_covar)
+  percentile <- ecdf(covar_data$col)
+  percentile_position <- percentile(as.numeric(val))*100
+  print(c(sub_path, percentile_position))
+}
 
-path <- "lastday_purchase_all< 42.5,money_spend_all< 4.685"
-a <- unlist(strsplit(path[[1]], ','))
-for(i in 1:length(a)){
-  if(grepl("<",a[i])){
-    b <- gsub("^(.*?)<.*", "\\1", a[i])
-    c <- gsub("^.*<(.*?)", "\\1", a[i])
-    d <- collage_data[,b]
-    print(qplot(d, geom = 'histogram'))
-    print(b)
-    print(c)
+
+
+grapher <- function(data, path) {
+  output <- list()
+  split_path <- unlist(strsplit(as.character(path[[1]]), ','))
+  for(i in 1:length(split_path)){
+    sub_path <- split_path[i]
+    if(grepl("<=",sub_path)){
+      covar <- gsub("^(.*?)<=.*", "\\1", sub_path)
+      val <- gsub("^.*<=(.*?)", "\\1", sub_path)
+      dummy(data, covar, val, sub_path)
+    } else if (grepl(">=",sub_path)){
+      covar <- gsub("^(.*?)>=.*", "\\1", sub_path)
+      val <- gsub("^.*>=(.*?)", "\\1", sub_path)
+      dummy(data, covar, val, sub_path)
+    } else if (grepl("=",sub_path)){
+      covar <- gsub("^(.*?)=.*", "\\1", sub_path)
+      val <- gsub("^.*=(.*?)", "\\1", sub_path)
+      dummy(data, covar, val, sub_path)
+  } else if (grepl(">",sub_path)){
+    covar <- gsub("^(.*?)>.*", "\\1", sub_path)
+    val <- gsub("^.*>(.*?)", "\\1", sub_path)
+    dummy(data, covar, val, sub_path)
+} else if (grepl("<",sub_path)){
+  covar <- gsub("^(.*?)<.*", "\\1", sub_path)
+  val <- gsub("^.*<(.*?)", "\\1", sub_path)
+  dummy(data, covar, val, sub_path)
+}
   }
 }

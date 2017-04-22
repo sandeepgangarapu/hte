@@ -71,7 +71,7 @@ positions_fn <- function(paths)
 #-------------------------------------------------------------------------------------------------------------------
 
 #Reading treatment control data with covariates and target variable
-collage_data <- read.csv('C:\\Users\\Sandeep Kumar\\Google Drive\\Ed Research\\Heterogenous treatment effects\\collage_treatment_effect.csv')
+collage_data <- read.csv('C:\\Users\\ganga020\\Google Drive\\Ed Research\\Heterogenous treatment effects\\collage_treatment_effect.csv')
 str(collage_data)
 
 #changing some variable to factors
