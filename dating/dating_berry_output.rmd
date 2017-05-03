@@ -1,0 +1,47 @@
+---
+title: "Heterogeneity in treatment effects of 'Anonimity in Dating' using berry-2s method"
+author: "Sandeep Gangarapu"
+date: '`r format(Sys.Date(), "%B %d, %Y")`'
+output: pdf_document
+classoption: landscape, a3paper
+---
+
+
+```{r echo=FALSE, warning=FALSE}
+setwd('C:\\Users\\ganga020\\Google Drive\\Ed Research\\Heterogenous treatment effects\\git_code\\hte')
+source('berry_function.R')
+dating_data <- read.csv('C:\\Users\\ganga020\\Google Drive\\Ed Research\\Heterogenous treatment effects\\git_code\\hte\\dating\\dating_data.csv')
+control_placeholder <- 0
+treatment_placeholder <- 1
+```
+
+
+```{r echo=FALSE, warning=FALSE}
+output <- berry2s(
+             data = dating_data,
+             control_group_placeholder = control_placeholder,
+             treatment_group_placeholder = treatment_placeholder,
+             treatment_variable = "manipulation",
+             target_variable = "match_rcvd_cnt_2",
+             covariates = c("age","male","orientation","asian","mideast","black",
+                            "natam","indian","pacisl","latin","white","other",
+                            "vote_score_10","u_acct_level", "view_sent_cnt_1",
+                            "view_rcvd_cnt_1","msg_sent_cnt_1","msg_rcvd_cnt_1",
+                            "match_sent_cnt_1","match_rcvd_cnt_1"),
+             covariate_factors = c("male","orientation","asian","mideast",
+                                   "black","manipulation","natam","indian","pacisl",
+                                   "latin","white","other","u_acct_level"))
+library(knitr)
+kable(output)
+
+```
+
+```{r echo=FALSE, warning=FALSE, eval=FALSE}
+write.csv(alt_nr_output, 'C:\\Users\\ganga020\\Google Drive\\Ed Research\\Heterogenous treatment effects\\alt_nr_output.csv', row.names = FALSE)
+write.csv(ego_nr_output, 'C:\\Users\\ganga020\\Google Drive\\Ed Research\\Heterogenous treatment effects\\ego_nr_output.csv', row.names = FALSE)
+write.csv(equi_nr_output, 'C:\\Users\\ganga020\\Google Drive\\Ed Research\\Heterogenous treatment effects\\equi_nr_output.csv', row.names = FALSE)
+write.csv(alt_con_output, 'C:\\Users\\ganga020\\Google Drive\\Ed Research\\Heterogenous treatment effects\\alt_con_output.csv', row.names = FALSE)
+#write.csv(ego_con_output, 'C:\\Users\\Sandeep Kumar\\Google Drive\\Ed Research\\Heterogenous treatment effects\\ego_con_output.csv', row.names = FALSE)
+write.csv(equi_con_output, 'C:\\Users\\ganga020\\Google Drive\\Ed Research\\Heterogenous treatment effects\\equi_con_output.csv', row.names = FALSE)
+```
+

@@ -8,9 +8,11 @@ classoption: landscape, a3paper
   
   
 ```{r echo=FALSE, warning=FALSE}
-setwd('C:\\Users\\Sandeep Kumar\\Google Drive\\Ed Research\\Heterogenous treatment effects\\git_code\\hte')
+suppressPackageStartupMessages({library(knitr)
+  library(ggplot2)})
+setwd('C:\\Users\\ganga020\\Google Drive\\Ed Research\\Heterogenous treatment effects\\git_code\\hte')
 source('athey_function.R')
-collage_data <- read.csv('C:\\Users\\Sandeep Kumar\\Google Drive\\Ed Research\\Heterogenous treatment effects\\collage_treatment_effect.csv')
+collage_data <- read.csv('C:\\Users\\ganga020\\Google Drive\\Ed Research\\Heterogenous treatment effects\\collage_treatment_effect.csv')
 control_placeholder <- 1
 egoistic_placeholder <- 2
 equitable_placeholder <- 3
@@ -18,8 +20,8 @@ altruistic_placeholder <- 4
 ```
 
 ##Altruistic group with number_referrals as target_variable
-```{r echo=FALSE, warning=FALSE}
-alt_nr_output <- athey(
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+athey_alt_nr_output <- athey(
   data = collage_data,
   control_group_placeholder = control_placeholder,
   treatment_group_placeholder = altruistic_placeholder,
@@ -28,11 +30,16 @@ alt_nr_output <- athey(
   covariates = c("satisfied","NPS","lastday_purchase_all","num_purchase_all","money_spend_all","survey"),
   covariate_factors = c("satisfied","survey"))
 library(knitr)
-kable(alt_nr_output)
+kable(athey_alt_nr_output)
+print(athey_alt_nr_output$path[1])
+grapher(collage_data, athey_alt_nr_output$path[1])
+print(athey_alt_nr_output$path[length(athey_alt_nr_output$path)])
+grapher(collage_data, athey_alt_nr_output$path[length(athey_alt_nr_output$path)])
 ```
 
-##Altruistic group with covertion_rate as target_variable
+
 ```{r echo=FALSE, warning=FALSE, eval=FALSE}
+##Altruistic group with covertion_rate as target_variable
 alt_con_output <- athey(
   data = collage_data,
   control_group_placeholder = control_placeholder,
@@ -47,7 +54,7 @@ kable(alt_con_output)
 
 ##Equitable group with number_referrals as target_variable
 ```{r echo=FALSE, warning=FALSE}
-equi_nr_output <- athey(
+athey_equi_nr_output <- athey(
   data = collage_data,
   control_group_placeholder = control_placeholder,
   treatment_group_placeholder = equitable_placeholder,
@@ -55,12 +62,17 @@ equi_nr_output <- athey(
   target_variable = "number_referrals",
   covariates = c("satisfied","NPS","lastday_purchase_all","num_purchase_all","money_spend_all","survey"),
   covariate_factors = c("satisfied","survey"))
-kable(equi_nr_output)
+kable(athey_equi_nr_output)
+print(athey_equi_nr_output$path[1])
+grapher(collage_data, athey_equi_nr_output$path[1])
+print(athey_equi_nr_output$path[length(athey_equi_nr_output$path)])
+grapher(collage_data, athey_equi_nr_output$path[length(athey_equi_nr_output$path)])
 ```
 
 
+
+```{r echo=FALSE, warning=FALSE, eval=FALSE}
 ##Equitable group with covertion_rate as target_variable
-```{r echo=FALSE, warning=FALSE}
 equi_con_output <- athey(
   data = collage_data,
   control_group_placeholder = control_placeholder,
@@ -73,9 +85,9 @@ kable(equi_con_output)
 ```
 
 
-##Egoistic group with number_referrals as target_variable
-```{r echo=FALSE, warning=FALSE}
 
+```{r echo=FALSE, warning=FALSE, eval=FALSE}
+##Egoistic group with number_referrals as target_variable
 ego_nr_output <- athey(
   data = collage_data,
   control_group_placeholder = control_placeholder,
@@ -87,8 +99,8 @@ ego_nr_output <- athey(
 kable(ego_nr_output)
 ```
 
-##Egoistic group with covertion_rate as target_variable
 ```{r echo=FALSE, warning=FALSE, eval=FALSE}
+##Egoistic group with covertion_rate as target_variable
 ego_con_output <- athey(
   data = collage_data,
   control_group_placeholder = control_placeholder,
@@ -102,11 +114,11 @@ kable(ego_con_output)
 
 
 ```{r echo=FALSE, warning=FALSE, eval=FALSE}
-write.csv(alt_nr_output, 'C:\\Users\\Sandeep Kumar\\Google Drive\\Ed Research\\Heterogenous treatment effects\\alt_nr_output.csv', row.names = FALSE)
-write.csv(ego_nr_output, 'C:\\Users\\Sandeep Kumar\\Google Drive\\Ed Research\\Heterogenous treatment effects\\ego_nr_output.csv', row.names = FALSE)
-write.csv(equi_nr_output, 'C:\\Users\\Sandeep Kumar\\Google Drive\\Ed Research\\Heterogenous treatment effects\\equi_nr_output.csv', row.names = FALSE)
-write.csv(alt_con_output, 'C:\\Users\\Sandeep Kumar\\Google Drive\\Ed Research\\Heterogenous treatment effects\\alt_con_output.csv', row.names = FALSE)
-write.csv(ego_con_output, 'C:\\Users\\Sandeep Kumar\\Google Drive\\Ed Research\\Heterogenous treatment effects\\ego_con_output.csv', row.names = FALSE)
+write.csv(athey_alt_nr_output, 'C:\\Users\\ganga020\\Google Drive\\Ed Research\\Heterogenous treatment effects\\athey_alt_nr_output.csv', row.names = FALSE)
+#write.csv(ego_nr_output, 'C:\\Users\\ganga020\\Google Drive\\Ed Research\\Heterogenous treatment effects\\ego_nr_output.csv', row.names = FALSE)
+write.csv(athey_equi_nr_output, 'C:\\Users\\ganga020\\Google Drive\\Ed Research\\Heterogenous treatment effects\\athey_equi_nr_output.csv', row.names = FALSE)
+#write.csv(alt_con_output, 'C:\\Users\\ganga020\\Google Drive\\Ed Research\\Heterogenous treatment effects\\alt_con_output.csv', row.names = FALSE)
+#write.csv(ego_con_output, 'C:\\Users\\ganga020\\Google Drive\\Ed Research\\Heterogenous treatment effects\\ego_con_output.csv', row.names = FALSE)
 # write.csv(equi_con_output, 'C:\\Users\\Sandeep Kumar\\Google Drive\\Ed Research\\Heterogenous treatment effects\\equi_con_output.csv', row.names = FALSE)
 ```
 

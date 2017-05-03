@@ -5,7 +5,7 @@ library(causalTree)
 library(devtools)
 library(randomForestCI)
 library(dplyr)
-setwd('C:\\Users\\Sandeep Kumar\\Google Drive\\Ed Research\\Heterogenous treatment effects\\git_code\\hte')
+setwd('C:\\Users\\ganga020\\Google Drive\\Ed Research\\Heterogenous treatment effects\\git_code\\hte')
 source("supplementary_functions.R")
 source('findit.R')
 
@@ -19,11 +19,11 @@ athey <- function(data, control_group_placeholder, treatment_group_placeholder,
   treatment_data <- data[data[treatment_variable]==treatment_group_placeholder,]
   treatment_data[treatment_variable] <- 1
   set.seed(12345)
-  control_data['split']<- sample(as.numeric(row.names(control_data))%% 3)
-  treatment_data['split']<- sample(as.numeric(row.names(treatment_data))%% 3)
-  est_data <- rbind(control_data %>% filter(split == 1), treatment_data %>% filter(split == 1))
-  train_data <- rbind(control_data %>% filter(split == 0), treatment_data %>% filter(split == 0))
-  test_data <- rbind(control_data %>% filter(split == 2), treatment_data %>% filter(split == 2))
+  control_data['split']<- sample(as.numeric(row.names(control_data))%% 9)
+  treatment_data['split']<- sample(as.numeric(row.names(treatment_data))%% 9)
+  est_data <- rbind(control_data %>% filter(split == 1), treatment_data %>% filter(split == 1 | split == 2))
+  test_data <- rbind(control_data %>% filter(split == 0), treatment_data %>% filter(split == 3 | split == 4))
+  train_data <- rbind(control_data %>% filter(split == 2), treatment_data %>% filter(split == 5 | split == 6 |split == 7 | split == 8 | split == 0))
   f = sprintf("%s ~ %s",target_variable,paste(covariates,collapse = ' + '))
   tree <- honest.causalTree(as.formula(f),
                             data = train_data,treatment = train_data[[treatment_variable]],
@@ -33,6 +33,6 @@ athey <- function(data, control_group_placeholder, treatment_group_placeholder,
   tree_cp <- tree$cptable[,1][which.min(tree$cptable[,4])]
   pruned_tree <- prune(tree, tree_cp)
   leaf_results <- get_leaf_results(test_data, pruned_tree, treatment_variable, target_variable)
-  leaf_results <- leaf_results[order(as.vector(leaf_results$effect), decreasing = TRUE),] 
+  #leaf_results <- leaf_results[order(as.vector(leaf_results$effect), decreasing = TRUE),] 
   return(leaf_results)
 }

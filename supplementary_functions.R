@@ -61,6 +61,10 @@ dummy <- function(data, covar, val, sub_path){
   percentile <- ecdf(covar_data$col)
   percentile_position <- percentile(as.numeric(val))*100
   print(c(sub_path, percentile_position))
+  print("mean")
+  print(mean(covar_data$col))
+  print("median")
+  print(median(covar_data$col))
 }
 
 
