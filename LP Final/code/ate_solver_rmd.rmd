@@ -1,0 +1,15 @@
+```{r}
+alt_ben <- read.csv('C:\\Users\\ganga020\\Google Drive\\Ed Research\\Heterogenous treatment effects\\LP\\alt_output.csv')
+equi_ben <- read.csv('C:\\Users\\ganga020\\Google Drive\\Ed Research\\Heterogenous treatment effects\\LP\\equi_output.csv')
+ego_ben <- read.csv('C:\\Users\\ganga020\\Google Drive\\Ed Research\\Heterogenous treatment effects\\LP\\ego_output.csv')
+
+alt_ben <- alt_ben %>% select(alt_output)
+equi_ben <- equi_ben %>% select(equi_output)
+ego_ben <- ego_ben %>% select(ego_output)
+
+mean(alt_ben$alt_output)
+mean(equi_ben$equi_output)
+mean(ego_ben$ego_output)
+
+benefit_m <- as.matrix(cbind(alt_ben, equi_ben, ego_ben))
+```

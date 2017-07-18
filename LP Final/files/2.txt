@@ -1,0 +1,27 @@
+setwd('C:\\Users\\ganga020\\Google Drive\\Ed Research\\Heterogenous treatment effects\\LP Final')
+library(dplyr)
+
+utitlity_data <- read.csv('./files/utility_output.csv')
+
+
+benefit_m <- as.matrix(utility_data %>% select(alt_output,equi_output,ego_output))
+cost_m <- as.matrix(utility_data %>% select(alt_cost,equi_cost,ego_cost))
+
+
+ben_v <- c(mean(utility_data$alt_output), mean(utility_data$equi_output), mean(utility_data$ego_output))
+
+
+cost_v <- c(mean(utility_data$alt_cost), mean(utility_data$equi_cost), mean(utility_data$ego_cost))
+
+utility_v <- ben_v - cost_v
+
+# In this scenario we choose the treatment that has the highest average treatment effect.
+# In this case, it is altruistic treatment 
+
+budget <- 100
+
+num_users <- min(floor(budget/mean(alt_cost$alt_c_output)),length(alt_ben$alt_output))
+
+total_utility_ate <- num_users * utility_v[1]
+
+

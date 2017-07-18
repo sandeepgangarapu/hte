@@ -1,0 +1,162 @@
+---
+title: "Heterogeneity in treatment effects of 'Call to action' using berry-2s method"
+author: "Sandeep Gangarapu"
+date: '`r format(Sys.Date(), "%B %d, %Y")`'
+output: pdf_document
+classoption: landscape, a3paper
+---
+
+
+```{r echo=FALSE, warning=FALSE}
+library(knitr)
+setwd('C:\\Users\\ganga020\\Google Drive\\Ed Research\\Heterogenous treatment effects\\git_code\\hte')
+source('berry_function.R')
+collage_data <- read.csv('C:\\Users\\ganga020\\Google Drive\\Ed Research\\Heterogenous treatment effects\\collage_treatment_effect.csv')
+control_placeholder <- '1'
+egoistic_placeholder <- '2'
+equitable_placeholder <- '3'
+altruistic_placeholder <- '4' 
+```
+
+```{r echo=FALSE, warning=FALSE, eval=FALSE}
+library(knitr)
+
+# alt_nr_output <- read.csv('C:\\Users\\ganga020\\Google Drive\\Ed Research\\Heterogenous treatment effects\\alt_nr_output.csv')
+# kable(alt_nr_output)
+# print(alt_nr_output$path[1])
+# grapher(collage_data, alt_nr_output$path[1])
+# print(alt_nr_output$path[length(alt_nr_output$path)])
+# grapher(collage_data, alt_nr_output$path[length(alt_nr_output$path)])
+# 
+# alt_con_output <- read.csv('C:\\Users\\ganga020\\Google Drive\\Ed Research\\Heterogenous treatment effects\\alt_con_output.csv')
+# kable(alt_con_output)
+# print(alt_con_output$path[1])
+# grapher(collage_data, alt_con_output$path[1])
+# print(alt_con_output$path[length(alt_con_output$path)])
+# grapher(collage_data, alt_con_output$path[length(alt_con_output$path)])
+
+```
+
+##Altruistic group with number_referrals as target_variable
+```{r echo=FALSE, warning=FALSE}
+# #alt_nr_output <- berry2s(
+#              data = collage_data,
+#              control_group_placeholder = control_placeholder,
+#              treatment_group_placeholder = altruistic_placeholder,
+#              treatment_variable = "cell",
+#              target_variable = "number_referrals",
+#              covariates = c("satisfied","NPS","lastday_purchase_all","num_purchase_all","money_spend_all","survey"),
+#              covariate_factors = c("cell","satisfied","survey"))
+alt_nr_output <- read.csv('C:\\Users\\ganga020\\Google Drive\\Ed Research\\Heterogenous treatment effects\\alt_nr_output.csv')
+library(knitr)
+kable(alt_nr_output)
+print(alt_nr_output$path[1])
+grapher(collage_data, alt_nr_output$path[1])
+print(alt_nr_output$path[length(alt_nr_output$path)])
+grapher(collage_data, alt_nr_output$path[length(alt_nr_output$path)])
+```
+
+```{r echo=FALSE, warning=FALSE, eval=FALSE}
+##Altruistic group with covertion_rate as target_variable
+
+alt_con_output <- berry2s(
+  data = collage_data,
+  control_group_placeholder = control_placeholder,
+  treatment_group_placeholder = altruistic_placeholder,
+  treatment_variable = "cell",
+  target_variable = "con_rate",
+  covariates = c("satisfied","NPS","lastday_purchase_all","num_purchase_all","money_spend_all","survey"),
+  covariate_factors = c("cell","satisfied","survey"))
+kable(alt_con_output)
+print(alt_nr_output$path[1])
+grapher(collage_data, alt_nr_output$path[1])
+print(alt_nr_output$path[length(alt_nr_output$path)])
+grapher(collage_data, alt_nr_output$path[length(alt_nr_output$path)])
+```
+
+
+##Equitable group with number_referrals as target_variable
+```{r echo=FALSE, warning=FALSE}
+# equi_nr_output <- berry2s(
+#   data = collage_data,
+#   control_group_placeholder = control_placeholder,
+#   treatment_group_placeholder = equitable_placeholder,
+#   treatment_variable = "cell",
+#   target_variable = "number_referrals",
+#   covariates = c("satisfied","NPS","lastday_purchase_all","num_purchase_all","money_spend_all","survey"),
+#   covariate_factors = c("cell","satisfied","survey"))
+
+equi_nr_output <- read.csv('C:\\Users\\ganga020\\Google Drive\\Ed Research\\Heterogenous treatment effects\\equi_nr_output.csv')
+kable(equi_nr_output)
+print(equi_nr_output$path[1])
+grapher(collage_data, equi_nr_output$path[1])
+print(equi_nr_output$path[length(equi_nr_output$path)])
+grapher(collage_data, equi_nr_output$path[length(equi_nr_output$path)])
+```
+
+
+```{r echo=FALSE, warning=FALSE, eval=FALSE}
+##Equitable group with covertion_rate as target_variable
+
+equi_con_output <- berry2s(
+  data = collage_data,
+  control_group_placeholder = control_placeholder,
+  treatment_group_placeholder = equitable_placeholder,
+  treatment_variable = "cell",
+  target_variable = "con_rate",
+  covariates = c("satisfied","NPS","lastday_purchase_all","num_purchase_all","money_spend_all","survey"),
+  covariate_factors = c("cell","satisfied","survey"))
+kable(equi_con_output)
+print(equi_con_output$path[1])
+grapher(collage_data, equi_con_output$path[1])
+print(equi_con_output$path[length(equi_con_output$path)])
+grapher(collage_data, equi_con_output$path[length(equi_con_output$path)])
+```
+
+
+```{r echo=FALSE, warning=FALSE, eval=FALSE}
+##Egoistic group with number_referrals as target_variable
+
+ego_nr_output <- berry2s(
+  data = collage_data,
+  control_group_placeholder = control_placeholder,
+  treatment_group_placeholder = egoistic_placeholder,
+  treatment_variable = "cell",
+  target_variable = "number_referrals",
+  covariates = c("satisfied","NPS","lastday_purchase_all","num_purchase_all","money_spend_all","survey"),
+  covariate_factors = c("cell","satisfied","survey"))
+kable(ego_nr_output)
+print(ego_nr_output$path[1])
+grapher(collage_data, ego_nr_output$path[1])
+print(ego_nr_output$path[length(ego_nr_output$path)])
+grapher(collage_data, ego_nr_output$path[length(ego_nr_output$path)])
+```
+
+```{r echo=FALSE, warning=FALSE, eval=FALSE}
+##Egoistic group with covertion_rate as target_variable
+
+ego_con_output <- berry2s(
+  data = collage_data,
+  control_group_placeholder = control_placeholder,
+  treatment_group_placeholder = egoistic_placeholder,
+  treatment_variable = "cell",
+  target_variable = "con_rate",
+  covariates = c("satisfied","NPS","lastday_purchase_all","num_purchase_all","money_spend_all","survey"),
+  covariate_factors = c("cell","satisfied","survey"))
+kable(ego_con_output)
+print(ego_con_output$path[1])
+grapher(collage_data, ego_con_output$path[1])
+print(ego_con_output$path[length(ego_con_output$path)])
+grapher(collage_data, ego_con_output$path[length(ego_con_output$path)])
+```
+
+
+```{r echo=FALSE, warning=FALSE, eval=FALSE}
+write.csv(alt_nr_output, 'C:\\Users\\ganga020\\Google Drive\\Ed Research\\Heterogenous treatment effects\\alt_nr_output.csv', row.names = FALSE)
+write.csv(ego_nr_output, 'C:\\Users\\ganga020\\Google Drive\\Ed Research\\Heterogenous treatment effects\\ego_nr_output.csv', row.names = FALSE)
+write.csv(equi_nr_output, 'C:\\Users\\ganga020\\Google Drive\\Ed Research\\Heterogenous treatment effects\\equi_nr_output.csv', row.names = FALSE)
+write.csv(alt_con_output, 'C:\\Users\\ganga020\\Google Drive\\Ed Research\\Heterogenous treatment effects\\alt_con_output.csv', row.names = FALSE)
+#write.csv(ego_con_output, 'C:\\Users\\Sandeep Kumar\\Google Drive\\Ed Research\\Heterogenous treatment effects\\ego_con_output.csv', row.names = FALSE)
+write.csv(equi_con_output, 'C:\\Users\\ganga020\\Google Drive\\Ed Research\\Heterogenous treatment effects\\equi_con_output.csv', row.names = FALSE)
+```
+

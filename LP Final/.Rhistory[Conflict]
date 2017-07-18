@@ -1,0 +1,512 @@
+budget <- 100
+# Calculating total utility. Here I am considering the utility as total benefit-total cost
+utility_m <- benefit_m - cost_m
+maximim <- apply(utility_m,1,max)
+utility_v <- c(utility_m)
+rank_order <- order(utility_v, decreasing = TRUE)
+total_utility_greedy = 0
+total_cost = 0
+geedy_func <- function(budget) {
+for (i in 1:length(rank_order)) {
+if (utility_v[rank_order[i]] < 0) {break}
+total_cost = total_cost+cost_m[rank_order[i]]
+total_utility_greedy = total_utility_greedy + utility_v[rank_order[i]]
+if (total_cost > budget) {
+total_cost = total_cost-cost_m[rank_order[i]]
+total_utility_greedy = total_utility_greedy - utility_v[rank_order[i]]
+break
+}
+}
+budget_left = budget - total_cost
+return (c(total_utility_greedy, total_cost, budget_left))
+}
+geedy_func(10)
+?seq
+seq(10, 100, 10)
+budger_v <- seq(10,300,10)
+budget_v <- seq(10,300,10)
+library(lpSolveAPI)
+setwd('C:\\Users\\ganga020\\Google Drive\\Ed Research\\Heterogenous treatment effects\\LP Final')
+library(dplyr)
+utility_data <- read.csv('./files/utility_output.csv')
+set.seed(12345)
+utility_data <- sample_n(utility_data, 1000)
+benefit_m <- as.matrix(utility_data %>% select(alt_output,equi_output,ego_output))
+cost_m <- as.matrix(utility_data %>% select(alt_cost,equi_cost,ego_cost))
+cost_v <- c(cost_m)
+# Total no. of possible treatments
+n_treatments <- ncol(benefit_m)
+# Total no of users
+n_users <- nrow(benefit_m)
+# Total available budget
+# budget <- 100
+# Calculating total utility. Here I am considering the utility as total benefit-total cost
+utility_m <- benefit_m - cost_m
+maximim <- apply(utility_m,1,max)
+utility_v <- c(utility_m)
+rank_order <- order(utility_v, decreasing = TRUE)
+total_utility_greedy = 0
+total_cost = 0
+geedy_func_u <- function(budget) {
+for (i in 1:length(rank_order)) {
+if (utility_v[rank_order[i]] < 0) {break}
+total_cost = total_cost+cost_m[rank_order[i]]
+total_utility_greedy = total_utility_greedy + utility_v[rank_order[i]]
+if (total_cost > budget) {
+total_cost = total_cost-cost_m[rank_order[i]]
+total_utility_greedy = total_utility_greedy - utility_v[rank_order[i]]
+break
+}
+}
+budget_left = budget - total_cost
+return (total_utility_greedy)
+}
+geedy_func_c <- function(budget) {
+for (i in 1:length(rank_order)) {
+if (utility_v[rank_order[i]] < 0) {break}
+total_cost = total_cost+cost_m[rank_order[i]]
+total_utility_greedy = total_utility_greedy + utility_v[rank_order[i]]
+if (total_cost > budget) {
+total_cost = total_cost-cost_m[rank_order[i]]
+total_utility_greedy = total_utility_greedy - utility_v[rank_order[i]]
+break
+}
+}
+budget_left = budget - total_cost
+return (total_cost)
+}
+geedy_func_b <- function(budget) {
+for (i in 1:length(rank_order)) {
+if (utility_v[rank_order[i]] < 0) {break}
+total_cost = total_cost+cost_m[rank_order[i]]
+total_utility_greedy = total_utility_greedy + utility_v[rank_order[i]]
+if (total_cost > budget) {
+total_cost = total_cost-cost_m[rank_order[i]]
+total_utility_greedy = total_utility_greedy - utility_v[rank_order[i]]
+break
+}
+}
+budget_left = budget - total_cost
+return (budget_left)
+}
+budget_v <- seq(10,300,10)
+lapply(budget_v, greedy_func_u)
+library(lpSolveAPI)
+setwd('C:\\Users\\ganga020\\Google Drive\\Ed Research\\Heterogenous treatment effects\\LP Final')
+library(dplyr)
+utility_data <- read.csv('./files/utility_output.csv')
+set.seed(12345)
+utility_data <- sample_n(utility_data, 1000)
+benefit_m <- as.matrix(utility_data %>% select(alt_output,equi_output,ego_output))
+cost_m <- as.matrix(utility_data %>% select(alt_cost,equi_cost,ego_cost))
+cost_v <- c(cost_m)
+# Total no. of possible treatments
+n_treatments <- ncol(benefit_m)
+# Total no of users
+n_users <- nrow(benefit_m)
+# Total available budget
+# budget <- 100
+# Calculating total utility. Here I am considering the utility as total benefit-total cost
+utility_m <- benefit_m - cost_m
+maximim <- apply(utility_m,1,max)
+utility_v <- c(utility_m)
+rank_order <- order(utility_v, decreasing = TRUE)
+total_utility_greedy = 0
+total_cost = 0
+greedy_func_u <- function(budget) {
+for (i in 1:length(rank_order)) {
+if (utility_v[rank_order[i]] < 0) {break}
+total_cost = total_cost+cost_m[rank_order[i]]
+total_utility_greedy = total_utility_greedy + utility_v[rank_order[i]]
+if (total_cost > budget) {
+total_cost = total_cost-cost_m[rank_order[i]]
+total_utility_greedy = total_utility_greedy - utility_v[rank_order[i]]
+break
+}
+}
+budget_left = budget - total_cost
+return (total_utility_greedy)
+}
+greedy_func_c <- function(budget) {
+for (i in 1:length(rank_order)) {
+if (utility_v[rank_order[i]] < 0) {break}
+total_cost = total_cost+cost_m[rank_order[i]]
+total_utility_greedy = total_utility_greedy + utility_v[rank_order[i]]
+if (total_cost > budget) {
+total_cost = total_cost-cost_m[rank_order[i]]
+total_utility_greedy = total_utility_greedy - utility_v[rank_order[i]]
+break
+}
+}
+budget_left = budget - total_cost
+return (total_cost)
+}
+greedy_func_b <- function(budget) {
+for (i in 1:length(rank_order)) {
+if (utility_v[rank_order[i]] < 0) {break}
+total_cost = total_cost+cost_m[rank_order[i]]
+total_utility_greedy = total_utility_greedy + utility_v[rank_order[i]]
+if (total_cost > budget) {
+total_cost = total_cost-cost_m[rank_order[i]]
+total_utility_greedy = total_utility_greedy - utility_v[rank_order[i]]
+break
+}
+}
+budget_left = budget - total_cost
+return (budget_left)
+}
+budget_v <- seq(10,300,10)
+lapply(budget_v, greedy_func_u)
+sapply(budget_v, greedy_func_u)
+library(lpSolveAPI)
+setwd('C:\\Users\\ganga020\\Google Drive\\Ed Research\\Heterogenous treatment effects\\LP Final')
+library(dplyr)
+utility_data <- read.csv('./files/utility_output.csv')
+# set.seed(12345)
+# utility_data <- sample_n(utility_data, 1000)
+benefit_m <- as.matrix(utility_data %>% select(alt_output,equi_output,ego_output))
+cost_m <- as.matrix(utility_data %>% select(alt_cost,equi_cost,ego_cost))
+cost_v <- c(cost_m)
+# Total no. of possible treatments
+n_treatments <- ncol(benefit_m)
+# Total no of users
+n_users <- nrow(benefit_m)
+# Total available budget
+# budget <- 100
+# Calculating total utility. Here I am considering the utility as total benefit-total cost
+utility_m <- benefit_m - cost_m
+maximim <- apply(utility_m,1,max)
+utility_v <- c(utility_m)
+rank_order <- order(utility_v, decreasing = TRUE)
+total_utility_greedy = 0
+total_cost = 0
+greedy_func_u <- function(budget) {
+for (i in 1:length(rank_order)) {
+if (utility_v[rank_order[i]] < 0) {break}
+total_cost = total_cost+cost_m[rank_order[i]]
+total_utility_greedy = total_utility_greedy + utility_v[rank_order[i]]
+if (total_cost > budget) {
+total_cost = total_cost-cost_m[rank_order[i]]
+total_utility_greedy = total_utility_greedy - utility_v[rank_order[i]]
+break
+}
+}
+budget_left = budget - total_cost
+return (total_utility_greedy)
+}
+greedy_func_c <- function(budget) {
+for (i in 1:length(rank_order)) {
+if (utility_v[rank_order[i]] < 0) {break}
+total_cost = total_cost+cost_m[rank_order[i]]
+total_utility_greedy = total_utility_greedy + utility_v[rank_order[i]]
+if (total_cost > budget) {
+total_cost = total_cost-cost_m[rank_order[i]]
+total_utility_greedy = total_utility_greedy - utility_v[rank_order[i]]
+break
+}
+}
+budget_left = budget - total_cost
+return (total_cost)
+}
+greedy_func_b <- function(budget) {
+for (i in 1:length(rank_order)) {
+if (utility_v[rank_order[i]] < 0) {break}
+total_cost = total_cost+cost_m[rank_order[i]]
+total_utility_greedy = total_utility_greedy + utility_v[rank_order[i]]
+if (total_cost > budget) {
+total_cost = total_cost-cost_m[rank_order[i]]
+total_utility_greedy = total_utility_greedy - utility_v[rank_order[i]]
+break
+}
+}
+budget_left = budget - total_cost
+return (budget_left)
+}
+budget_v <- seq(10,300,10)
+sapply(budget_v, greedy_func_u)
+library(lpSolveAPI)
+setwd('C:\\Users\\ganga020\\Google Drive\\Ed Research\\Heterogenous treatment effects\\LP Final')
+library(dplyr)
+utility_data <- read.csv('./files/utility_output.csv')
+# set.seed(12345)
+# utility_data <- sample_n(utility_data, 1000)
+benefit_m <- as.matrix(utility_data %>% select(alt_output,equi_output,ego_output))
+cost_m <- as.matrix(utility_data %>% select(alt_cost,equi_cost,ego_cost))
+cost_v <- c(cost_m)
+# Total no. of possible treatments
+n_treatments <- ncol(benefit_m)
+# Total no of users
+n_users <- nrow(benefit_m)
+# Total available budget
+# budget <- 100
+# Calculating total utility. Here I am considering the utility as total benefit-total cost
+utility_m <- benefit_m - cost_m
+maximim <- apply(utility_m,1,max)
+utility_v <- c(utility_m)
+rank_order <- order(utility_v, decreasing = TRUE)
+total_utility_greedy = 0
+total_cost = 0
+greedy_func_u <- function(budget) {
+for (i in 1:length(rank_order)) {
+if (utility_v[rank_order[i]] < 0) {break}
+total_cost = total_cost+cost_m[rank_order[i]]
+total_utility_greedy = total_utility_greedy + utility_v[rank_order[i]]
+if (total_cost > budget) {
+total_cost = total_cost-cost_m[rank_order[i]]
+total_utility_greedy = total_utility_greedy - utility_v[rank_order[i]]
+break
+}
+}
+budget_left = budget - total_cost
+return (total_utility_greedy)
+}
+greedy_func_c <- function(budget) {
+for (i in 1:length(rank_order)) {
+if (utility_v[rank_order[i]] < 0) {break}
+total_cost = total_cost+cost_m[rank_order[i]]
+total_utility_greedy = total_utility_greedy + utility_v[rank_order[i]]
+if (total_cost > budget) {
+total_cost = total_cost-cost_m[rank_order[i]]
+total_utility_greedy = total_utility_greedy - utility_v[rank_order[i]]
+break
+}
+}
+budget_left = budget - total_cost
+return (total_cost)
+}
+greedy_func_b <- function(budget) {
+for (i in 1:length(rank_order)) {
+if (utility_v[rank_order[i]] < 0) {break}
+total_cost = total_cost+cost_m[rank_order[i]]
+total_utility_greedy = total_utility_greedy + utility_v[rank_order[i]]
+if (total_cost > budget) {
+total_cost = total_cost-cost_m[rank_order[i]]
+total_utility_greedy = total_utility_greedy - utility_v[rank_order[i]]
+break
+}
+}
+budget_left = budget - total_cost
+return (budget_left)
+}
+greedy_func_users <- function(budget) {
+for (i in 1:length(rank_order)) {
+if (utility_v[rank_order[i]] < 0) {break}
+total_cost = total_cost+cost_m[rank_order[i]]
+total_utility_greedy = total_utility_greedy + utility_v[rank_order[i]]
+if (total_cost > budget) {
+total_cost = total_cost-cost_m[rank_order[i]]
+total_utility_greedy = total_utility_greedy - utility_v[rank_order[i]]
+break
+}
+}
+budget_left = budget - total_cost
+return (i)
+}
+budget_v <- seq(10,300,10)
+greedy_utility <- sapply(budget_v, greedy_func_u)
+greedy_users <- sapply(budget_v, greedy_func_users)
+greedy_users
+greedy_cost <- sapply(budget_v, greedy_func_c)
+greedy_cost
+greedy_budget <- sapply(budget_v, greedy_func_b)
+greedy_budget
+data.frame(c(budget_v, greedy_utility))
+data.frame(budget_v, greedy_utility)
+library(ggplot2)
+ggplot(df1, aes(budget_v, greedy_utility)) + geom_line()
+df1 <- data.frame(budget_v, greedy_utility)
+ggplot(df1, aes(budget_v, greedy_utility)) + geom_line()
+greedy_utility <- sapply(budget_v, greedy_func_u)
+greedy_users <- sapply(budget_v, greedy_func_users)
+greedy_cost <- sapply(budget_v, greedy_func_c)
+greedy_budget <- sapply(budget_v, greedy_func_b)
+greedy_utility <- sapply(budget_v, greedy_func_u)
+greedy_users <- sapply(budget_v, greedy_func_users)
+greedy_cost <- sapply(budget_v, greedy_func_c)
+greedy_budget <- sapply(budget_v, greedy_func_b)
+df1 <- data.frame(budget_v, greedy_utility)
+df2 <- data.frame(budget_v, greedy_users)
+df3 <- data.frame(budget_v, greedy_cost)
+df4 <- data.frame(budget_v, greedy_budget)
+ggplot(df1, aes(budget_v, greedy_utility)) + geom_line()
+ggplot(df2, aes(budget_v, greedy_users)) + geom_line()
+ggplot(df3, aes(budget_v, greedy_cost)) + geom_line()
+ggplot(df4, aes(budget_v, greedy_budget)) + geom_line()
+library(lpSolveAPI)
+setwd('C:\\Users\\ganga020\\Google Drive\\Ed Research\\Heterogenous treatment effects\\LP Final')
+library(dplyr)
+# Benefit(Treatment effect) matrix for all users, I have users as row indices and treatments as column indices
+utility_data <- read.csv('./files/utility_output.csv')
+set.seed(12345)
+#utility_data <- sample_n(utility_data, 5000)
+benefit_m <- as.matrix(utility_data %>% select(alt_output,equi_output,ego_output))
+cost_m <- as.matrix(utility_data %>% select(alt_cost,equi_cost,ego_cost))
+# Total no. of possible treatments
+n_treatments <- ncol(benefit_m)
+# Total no of users
+n_users <- nrow(benefit_m)
+# Total no of decisions to be made, which user should be assigned to which treatment
+n_decisions <- n_users*n_treatments
+# Total available budget
+# budget <- 1000
+# Calculating total utility. Here I am considering the utility as total benefit-total cost
+utility_m <- benefit_m - cost_m
+utility_v <- c(utility_m)
+lp_func <- function (custom_budget) {
+# Initializing the linear programming function
+lprec<-make.lp(0,n_decisions)
+# Initializing the objective function
+# The objective function here is the maximization of (total benefit - total cost) i.e. total utility
+set.objfn(lprec, utility_v)
+# Adding constarints
+# 1: Each user can be assigned to only one treatment.
+# 2. Total cost cannot exceed budget.
+# 3. Each user can only be assigned to one treatment only once
+# Adding constraint 1
+# 1: Each user can be assigned to maximum one treatment.
+rep.col<-function(x,n){
+matrix(rep(x,each=n), ncol=n, byrow=TRUE)
+}
+I <- diag(n_users)
+for(i in 1:n_users){
+add.constraint(lprec, c(rep.col(I[,i],n_treatments)), "<=", 1)
+}
+# Adding constraint 2
+# 2. Total cost cannot exceed budget.
+add.constraint(lprec, c(cost_m), "<=", custom_budget)
+# Adding constraint 3
+# 3. set the type of decision variables to binary
+set.type(lprec,1:n_decisions,"binary")
+# set the LP solver preference to maximization (instead of minimization)
+lp.control(lprec,sense='max')
+# set time limit
+lp.control(lprec, timeout = 120)
+# Visually check the model, write the model to a text file
+write.lp(lprec,'./files/lpmodel_opt.txt',type='lp')
+# solve the model
+# The output '0' means that there is a solution
+solve(lprec)
+# Final result
+# This matrix shows which user is allocated what treatment under the set constraints
+# We can see that many users are not allocated any treatment because of constrained budget.
+assign_matrix <- matrix(get.variables(lprec),nrow=n_users)
+# save the results in a csv
+write.csv(matrix(get.variables(lprec),nrow=n_users),"./files/lp_opt_solution.csv")
+utility_assign_matrix <- utility_m * assign_matrix
+cost_assign_matrix <- cost_m * assign_matrix
+users_served <- sum(c(assign_matrix))
+total_utility_lp <- sum(c(utility_assign_matrix))
+total_cost_lp <- sum(c(cost_assign_matrix))
+budget_left = custom_budget - total_cost_lp
+return (list(users_served, total_utility_lp, total_cost_lp, budget_left))
+}
+#lp_func(100)
+input <- c(100,110)
+a <- lapply(input, lp_func)
+# write.csv(data.frame(a),'./files/lp_graph_output.csv')
+a
+a[[1]]
+a[1]
+list(c(1,2), c(2,3))
+b <- list(c(1,2), c(2,3))
+b[1]
+b[2]
+fn <- function()
+{retunn (c(1,2))}
+fn <- function()
+{return (c(1,2))}
+a <- fn
+a
+a <- fn
+a
+fn <- function()
+{return (c(1,2))}
+a <- fn()
+a
+sapply(c(1,2), fn)
+fn <- function(n){
+return (c(1,2))
+}
+sapply(c(1,2), fn)
+t(sapply(c(1,2), fn))
+data.frame(t(sapply(c(1,2), fn)))
+a <- data.frame(t(sapply(c(1,2), fn)))
+a
+colnames(a) <- c('a','b')
+a
+a$c <- c(1,2)
+a
+library(lpSolveAPI)
+setwd('C:\\Users\\ganga020\\Google Drive\\Ed Research\\Heterogenous treatment effects\\LP Final')
+library(dplyr)
+# Benefit(Treatment effect) matrix for all users, I have users as row indices and treatments as column indices
+utility_data <- read.csv('./files/utility_output.csv')
+set.seed(12345)
+#utility_data <- sample_n(utility_data, 5000)
+benefit_m <- as.matrix(utility_data %>% select(alt_output,equi_output,ego_output))
+cost_m <- as.matrix(utility_data %>% select(alt_cost,equi_cost,ego_cost))
+# Total no. of possible treatments
+n_treatments <- ncol(benefit_m)
+# Total no of users
+n_users <- nrow(benefit_m)
+# Total no of decisions to be made, which user should be assigned to which treatment
+n_decisions <- n_users*n_treatments
+# Total available budget
+# budget <- 1000
+# Calculating total utility. Here I am considering the utility as total benefit-total cost
+utility_m <- benefit_m - cost_m
+utility_v <- c(utility_m)
+lp_func <- function (custom_budget) {
+# Initializing the linear programming function
+lprec<-make.lp(0,n_decisions)
+# Initializing the objective function
+# The objective function here is the maximization of (total benefit - total cost) i.e. total utility
+set.objfn(lprec, utility_v)
+# Adding constarints
+# 1: Each user can be assigned to only one treatment.
+# 2. Total cost cannot exceed budget.
+# 3. Each user can only be assigned to one treatment only once
+# Adding constraint 1
+# 1: Each user can be assigned to maximum one treatment.
+rep.col<-function(x,n){
+matrix(rep(x,each=n), ncol=n, byrow=TRUE)
+}
+I <- diag(n_users)
+for(i in 1:n_users){
+add.constraint(lprec, c(rep.col(I[,i],n_treatments)), "<=", 1)
+}
+# Adding constraint 2
+# 2. Total cost cannot exceed budget.
+add.constraint(lprec, c(cost_m), "<=", custom_budget)
+# Adding constraint 3
+# 3. set the type of decision variables to binary
+set.type(lprec,1:n_decisions,"binary")
+# set the LP solver preference to maximization (instead of minimization)
+lp.control(lprec,sense='max')
+# set time limit
+lp.control(lprec, timeout = 60)
+# Visually check the model, write the model to a text file
+write.lp(lprec,'./files/lpmodel_opt.txt',type='lp')
+# solve the model
+# The output '0' means that there is a solution
+solve(lprec)
+# Final result
+# This matrix shows which user is allocated what treatment under the set constraints
+# We can see that many users are not allocated any treatment because of constrained budget.
+assign_matrix <- matrix(get.variables(lprec),nrow=n_users)
+# save the results in a csv
+write.csv(matrix(get.variables(lprec),nrow=n_users),"./files/lp_opt_solution.csv")
+utility_assign_matrix <- utility_m * assign_matrix
+cost_assign_matrix <- cost_m * assign_matrix
+users_served <- sum(c(assign_matrix))
+total_utility_lp <- sum(c(utility_assign_matrix))
+total_cost_lp <- sum(c(cost_assign_matrix))
+budget_left = custom_budget - total_cost_lp
+return (c(users_served, total_utility_lp, total_cost_lp, budget_left))
+}
+budget_v <- seq(10,300,10)
+lp_solution <- sapply(budget_v, lp_func)
+transpose_dataframe <- data.frame(t(lp_solution))
+colnames(transpose_dataframe) <- c('users_served', 'total_utility_lp', 'total_cost_lp', 'budget_left')
+transpose_dataframe$budget_v <- budget_v
+write.csv(transpose_dataframe,'./files/lp_graph_output.csv')

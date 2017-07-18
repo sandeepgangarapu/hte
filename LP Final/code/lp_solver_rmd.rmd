@@ -1,0 +1,136 @@
+```{r,  echo = FALSE}
+library(lpSolveAPI)
+setwd('C:\\Users\\ganga020\\Google Drive\\Ed Research\\Heterogenous treatment effects\\LP Final')
+```
+
+
+Benefit(Treatment effect) matrix for all users, I have users as row indices and treatments as column indices
+
+```{r}
+alt_ben <- read.csv('./files/alt_output.csv')
+equi_ben <- read.csv('C:\\Users\\ganga020\\Google Drive\\Ed Research\\Heterogenous treatment effects\\LP\\equi_output.csv')
+ego_ben <- read.csv('C:\\Users\\ganga020\\Google Drive\\Ed Research\\Heterogenous treatment effects\\LP\\ego_output.csv')
+
+alt_ben <- alt_ben %>% select(alt_output)
+equi_ben <- equi_ben %>% select(equi_output)
+ego_ben <- ego_ben %>% select(ego_output)
+
+benefit_m <- as.matrix(cbind(alt_ben, equi_ben, ego_ben))
+```
+
+Cost of treatment matrix
+```{r}
+
+alt_cost <- read.csv('C:\\Users\\ganga020\\Google Drive\\Ed Research\\Heterogenous treatment effects\\LP\\alt_c_output.csv')
+equi_cost <- read.csv('C:\\Users\\ganga020\\Google Drive\\Ed Research\\Heterogenous treatment effects\\LP\\equi_c_output.csv')
+ego_cost <- read.csv('C:\\Users\\ganga020\\Google Drive\\Ed Research\\Heterogenous treatment effects\\LP\\ego_c_output.csv')
+
+alt_cost <- alt_cost %>% select(alt_c_output)
+equi_cost <- equi_cost %>% select(equi_c_output)
+ego_cost <- ego_cost %>% select(ego_c_output)
+
+cost_m <- as.matrix(cbind(alt_cost, equi_cost, ego_cost))
+```
+
+
+
+
+Total no. of possible treatments
+```{r}
+n_treatments <- 3
+```
+
+Total no of users
+```{r}
+n_users <- nrow(benefit_m)
+```
+
+Total no of decisions to be made, which user should be assigned to which treatment
+```{r}
+n_decisions <- n_users*n_treatments
+```
+
+Total available budget
+```{r}
+budget <- 100
+```
+
+
+
+Calculating total utility. Here I am considering the utility as total benefit-total cost
+```{r}
+utility_m <- benefit_m - cost_m
+utility_v <- c(utility_m)
+head(utility_m)
+```
+
+Initializing the linear programming function
+```{r}
+lprec<-make.lp(0,n_decisions)
+```
+
+Initializing the objective function
+The objective function here is the maximization of (total benefit - total cost) i.e. total utility
+```{r}
+set.objfn(lprec, utility_v)
+```
+
+Adding constarints
+1: Each user can be assigned to only one treatment.
+2. Total cost cannot exceed budget.
+3. Each user can only be assigned to one treatment only once
+
+
+Adding constraint 1
+1: Each user can be assigned to maximum one treatment.
+```{r}
+rep.col<-function(x,n){
+  matrix(rep(x,each=n), ncol=n, byrow=TRUE)
+}
+I <- diag(n_users)
+for(i in 1:n_users){
+  add.constraint(lprec, c(rep.col(I[,i],n_treatments)), "<=", 1)
+}
+```
+
+Adding constraint 2
+2. Total cost cannot exceed budget.
+```{r}
+add.constraint(lprec, c(cost_m), "<=", budget)
+```
+
+Adding constraint 3
+3. set the type of decision variables to binary
+```{r}
+set.type(lprec,1:n_decisions,"binary")
+```
+
+set the LP solver preference to maximization (instead of minimization)
+```{r}
+lp.control(lprec,sense='max')
+```
+
+Visually check the model, write the model to a text file
+```{r}
+write.lp(lprec,'lpmodel2.txt',type='lp')
+```
+
+solve the model
+The output '0' means that there is a solution
+```{r}
+solve(lprec)
+```
+
+# Final result
+This matrix shows which user is allocated what treatment under the set constraints 
+We can see that many users are not allocated any treatment because of constrained budget.
+```{r}
+matrix(get.variables(lprec),nrow=n_users)
+```
+
+
+save the results in a csv
+```{r}
+write.csv(matrix(get.variables(lprec),nrow=n_users),"solution.csv")
+```
+
